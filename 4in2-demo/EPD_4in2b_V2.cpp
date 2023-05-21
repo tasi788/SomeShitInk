@@ -77,10 +77,11 @@ parameter:
 void EPD_4IN2B_V2_ReadBusy(void)
 {
     Debug("e-Paper busy\r\n");
-    do{
+    do
+    {
         EPD_4IN2B_V2_SendCommand(0x71);
-		DEV_Delay_ms(50);
-    }while(!(DEV_Digital_Read(EPD_BUSY_PIN)));
+        DEV_Delay_ms(50);
+    } while (!(DEV_Digital_Read(EPD_BUSY_PIN)));
     Debug("e-Paper busy release\r\n");
     DEV_Delay_ms(50);
 }
@@ -104,7 +105,7 @@ void EPD_4IN2B_V2_Init(void)
 {
     EPD_4IN2B_V2_Reset();
 
-    EPD_4IN2B_V2_SendCommand(0x04); 
+    EPD_4IN2B_V2_SendCommand(0x04);
     EPD_4IN2B_V2_ReadBusy();
 
     EPD_4IN2B_V2_SendCommand(0x00);
@@ -118,20 +119,26 @@ parameter:
 void EPD_4IN2B_V2_Clear(void)
 {
     UWORD Width, Height;
-    Width = (EPD_4IN2B_V2_WIDTH % 8 == 0)? (EPD_4IN2B_V2_WIDTH / 8 ): (EPD_4IN2B_V2_WIDTH / 8 + 1);
+    Width = (EPD_4IN2B_V2_WIDTH % 8 == 0) ? (EPD_4IN2B_V2_WIDTH / 8) : (EPD_4IN2B_V2_WIDTH / 8 + 1);
     Height = EPD_4IN2B_V2_HEIGHT;
 
+    // Display Start White/Black Data
     EPD_4IN2B_V2_SendCommand(0x10);
-    for (UWORD j = 0; j < Height; j++) {
-        for (UWORD i = 0; i < Width; i++) {
+    for (UWORD j = 0; j < Height; j++)
+    {
+        for (UWORD i = 0; i < Width; i++)
+        {
             EPD_4IN2B_V2_SendData(0xFF);
         }
     }
 
+    // Display Start RED Data
     EPD_4IN2B_V2_SendCommand(0x13);
-    for (UWORD j = 0; j < Height; j++) {
-        for (UWORD i = 0; i < Width; i++) {
-            EPD_4IN2B_V2_SendData(0xFF);
+    for (UWORD j = 0; j < Height; j++)
+    {
+        for (UWORD i = 0; i < Width; i++)
+        {
+            EPD_4IN2B_V2_SendData(0x00);
         }
     }
 
@@ -145,20 +152,27 @@ parameter:
 void EPD_4IN2B_V2_Display(const UBYTE *blackimage, const UBYTE *ryimage)
 {
     UWORD Width, Height;
-    Width = (EPD_4IN2B_V2_WIDTH % 8 == 0)? (EPD_4IN2B_V2_WIDTH / 8 ): (EPD_4IN2B_V2_WIDTH / 8 + 1);
+    Width = (EPD_4IN2B_V2_WIDTH % 8 == 0) ? (EPD_4IN2B_V2_WIDTH / 8) : (EPD_4IN2B_V2_WIDTH / 8 + 1);
     Height = EPD_4IN2B_V2_HEIGHT;
 
+    // Black & White
     EPD_4IN2B_V2_SendCommand(0x10);
-    for (UWORD j = 0; j < Height; j++) {
-        for (UWORD i = 0; i < Width; i++) {
+    for (UWORD j = 0; j < Height; j++)
+    {
+        for (UWORD i = 0; i < Width; i++)
+        {
             EPD_4IN2B_V2_SendData(blackimage[i + j * Width]);
         }
     }
 
+    // Red Pixel Data
+    //(400x300):
     EPD_4IN2B_V2_SendCommand(0x13);
-    for (UWORD j = 0; j < Height; j++) {
-        for (UWORD i = 0; i < Width; i++) {
-            EPD_4IN2B_V2_SendData(ryimage[i + j * Width]);
+    for (UWORD j = 0; j < Height; j++)
+    {
+        for (UWORD i = 0; i < Width; i++)
+        {
+            EPD_4IN2B_V2_SendData(ryimage[i + j * Width]); // RED
         }
     }
 
@@ -172,10 +186,10 @@ parameter:
 void EPD_4IN2B_V2_Sleep(void)
 {
     EPD_4IN2B_V2_SendCommand(0X50);
-    EPD_4IN2B_V2_SendData(0xf7);		//border floating	
+    EPD_4IN2B_V2_SendData(0xf7); // border floating
 
-    EPD_4IN2B_V2_SendCommand(0X02);  	//power off
-    EPD_4IN2B_V2_ReadBusy(); //waiting for the electronic paper IC to release the idle signal
-    EPD_4IN2B_V2_SendCommand(0X07);  	//deep sleep
+    EPD_4IN2B_V2_SendCommand(0X02); // power off
+    EPD_4IN2B_V2_ReadBusy();        // waiting for the electronic paper IC to release the idle signal
+    EPD_4IN2B_V2_SendCommand(0X07); // deep sleep
     EPD_4IN2B_V2_SendData(0xA5);
 }
