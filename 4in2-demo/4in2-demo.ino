@@ -19,9 +19,8 @@ void setup()
   printf("Init Done...\r\n");
   DEV_Delay_ms(2000);
 
-  // UBYTE *BlackImage, *RYImage; // Red or Yellow
-  // printf("NewImage:BlackImage and RYImage\r\n");
-  // Paint_NewImage(BlackImage, EPD_4IN2B_V2_WIDTH, EPD_4IN2B_V2_HEIGHT, 180, WHITE);
+  UBYTE *BlackImage, *RYImage; // Red or Yellow
+
 
   // printf("show image for array\r\n");
   // EPD_4IN2B_V2_Display(gImage_4in2bc_b, gImage_4in2bc_ry);
